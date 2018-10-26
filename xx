@@ -1,0 +1,24 @@
+#! /bin/bash
+# ./script.sh <search> : search is case sensitive, NFL, NBA, Canucks, Patriots etc
+# ./script.sh : no input returns the entire schedule
+# note: you will probably have to login to https://guide.smoothstreams.tv/list.php with your browser for this to work
+# This will only produce results for the current day even at 11:59pm
+
+
+url="https://guide.smoothstreams.tv/list.php?timezone="
+#set your timezone by modifying the timezone variable: 
+timezone="America%2FLos_Angeles"
+#PST = America%2FLos_Angeles
+#CST = America%2FChicago
+#EST = America%2FNew_York
+#UTC = UTC
+#BST = Europe%2FLondon
+#CET = Europe%2FAmsterdam 
+#HKT = Asia%2FHong_Kong
+date
+if [[ -z $1 ]]; then
+  curl -s $url$timezone | grep -oP "(?<=li class='' style='color:).*?(?=</li>)" | sed -e 's/<[^>]*>//g' | grep -o ">.*"
+else
+  curl -s $url$timezone | grep -oP "(?<=li class='' style='color:).*?(?=</li>)" | sed -e 's/<[^>]*>//g' | grep -o ">.*" | grep $1
+fi
+
